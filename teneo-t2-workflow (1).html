@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply AI × Teneo Campaigning · T2 Builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  /* dark band */
+  --ink:#0E0E12;--ink2:#15151B;
+  --cream:#F2F1EA;--cream-mut:rgba(242,241,234,.6);--cream-dim:rgba(242,241,234,.38);
+  --dline:rgba(255,255,255,.12);--dline2:rgba(255,255,255,.18);
+  /* light band */
+  --paper:#ECEBE5;--card:#FFFFFF;--tx:#16161A;--tx-mut:#6B6B64;--tx-dim:#9C9C92;
+  --rule:#DAD9D2;--rule2:#CBCAC2;
+  /* accent (from reference) */
+  --acc:#2B53DD;--acc-deep:#2143C0;--acc-soft:rgba(43,83,221,.12);--acc-hi:rgba(43,83,221,.95);--acc-lt:#7AA0FF;
+  --gold:#B07A1F;
+  --serif:Georgia,'Times New Roman',Cambria,serif;
+  --sans:Arial,Helvetica,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--paper);color:var(--tx);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes draw{to{transform:scaleX(1);}}
+@keyframes ping{0%{transform:scale(1);opacity:.55;}100%{transform:scale(2.2);opacity:0;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ── DARK BAND ────────────────────────────────────────────────────── */
+.band-dark{background:var(--ink);color:var(--cream);}
+.topbar{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:1.6rem 2.5rem .5rem;}
+.tb-left{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cream);}
+.tb-left b{color:var(--cream);font-weight:500;}
+.tb-left .x{color:var(--cream-dim);margin:0 .6rem;}
+.tb-pill{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-mut);border:1px solid var(--dline2);border-radius:20px;padding:.4rem 1rem;}
+
+.hero{max-width:1180px;margin:0 auto;padding:3.5rem 2.5rem 3rem;}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:1.4rem;opacity:0;animation:fu .6s ease .1s both;}
+.hero-title{font-family:var(--serif);font-size:clamp(46px,7vw,90px);font-weight:700;line-height:1.0;letter-spacing:-.02em;color:var(--cream);margin-bottom:1.6rem;opacity:0;animation:fu .6s ease .16s both;}
+.mark{position:relative;color:#fff;white-space:nowrap;padding:0 .06em;}
+.mark::before{content:'';position:absolute;inset:.04em -.04em .06em;background:var(--acc-hi);z-index:-1;transform:scaleX(0);transform-origin:left;animation:draw .7s cubic-bezier(.6,0,.2,1) .65s forwards;}
+.hero-sub{font-size:17px;color:var(--cream-mut);line-height:1.7;max-width:640px;margin-bottom:2.5rem;opacity:0;animation:fu .6s ease .22s both;}
+.hero-sub b{color:var(--cream);font-weight:700;}
+.hero-div{height:1px;background:var(--dline);max-width:1180px;margin:0 auto;opacity:0;animation:fu .6s ease .28s both;}
+.meta{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:1.4rem 2.5rem 3rem;opacity:0;animation:fu .6s ease .32s both;}
+.meta-item{padding-right:1.5rem;position:relative;}
+.meta-item+.meta-item{padding-left:1.5rem;border-left:1px solid var(--dline);}
+.meta-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:.5rem;}
+.meta-val{font-size:13.5px;color:var(--cream);line-height:1.5;}
+
+/* ── LIGHT BAND ───────────────────────────────────────────────────── */
+.section{max-width:1180px;margin:0 auto;padding:3.5rem 2.5rem;}
+.sec-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:.6rem;}
+.sec-num{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--acc-deep);letter-spacing:.05em;flex-shrink:0;padding-top:.2rem;}
+.sec-title{font-family:var(--serif);font-size:clamp(30px,4vw,46px);font-weight:700;color:var(--tx);letter-spacing:-.01em;line-height:1.05;}
+.sec-sub{font-size:14.5px;color:var(--tx-mut);line-height:1.7;max-width:620px;margin:0 0 2rem 0;padding-left:calc(13px + 1rem);}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:1.5rem 1.6rem;}
+.stat-n{font-family:var(--serif);font-size:40px;font-weight:700;color:var(--tx);line-height:1;letter-spacing:-.01em;}
+.stat-n .u{font-size:.48em;color:var(--acc-deep);margin-left:.05em;}
+.stat-rule{width:34px;height:3px;background:var(--acc);border-radius:2px;margin:1rem 0 .7rem;}
+.stat-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-mut);}
+
+/* build tabs */
+.build-tabs{display:flex;gap:1rem;margin-bottom:1.4rem;}
+.btab{position:relative;flex:1;display:flex;align-items:center;gap:.9rem;padding:1.1rem 1.4rem;background:var(--card);border:1px solid var(--rule);border-radius:14px;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden;}
+.btab::after{content:'';position:absolute;left:0;bottom:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.btab:hover{transform:translateY(-2px);border-color:var(--rule2);}
+.btab.active{border-color:var(--rule2);box-shadow:0 16px 36px -24px rgba(43,83,221,.7);}
+.btab.active::after{transform:scaleX(1);}
+.btab-num{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--acc-deep);flex-shrink:0;line-height:1;}
+.btab.active .btab-num{color:var(--acc);}
+.btab-name{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--tx);line-height:1.1;}
+.btab-meta{font-family:var(--mono);font-size:9.5px;color:var(--tx-dim);margin-top:3px;letter-spacing:.02em;}
+
+.build-panel{display:none;}
+.build-panel.active{display:block;animation:fu .4s ease both;}
+
+.panel-header{position:relative;display:flex;align-items:flex-start;gap:1.4rem;padding:1.8rem 1.9rem;background:var(--card);border:1px solid var(--rule);border-radius:14px;margin-bottom:1rem;}
+.ph-kick{position:absolute;left:0;top:1.8rem;bottom:1.8rem;width:3px;background:var(--acc);border-radius:0 3px 3px 0;}
+.ph-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-dim);margin-bottom:.5rem;}
+.ph-title{font-family:var(--serif);font-size:25px;font-weight:700;color:var(--tx);margin-bottom:.5rem;line-height:1.1;}
+.ph-desc{font-size:13px;color:var(--tx-mut);line-height:1.75;max-width:680px;}
+.ph-chips{display:flex;gap:.42rem;flex-wrap:wrap;margin-top:1rem;}
+.chip{font-family:var(--mono);font-size:9px;padding:.26rem .64rem;border-radius:20px;background:var(--acc-soft);color:var(--acc-deep);border:1px solid rgba(43,83,221,.2);}
+.chip-amber{background:rgba(176,122,31,.1);color:#8A5E16;border-color:rgba(176,122,31,.3);}
+.chip-save{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:500;}
+.ph-meta{margin-left:auto;display:flex;flex-direction:column;gap:.6rem;align-items:flex-end;flex-shrink:0;}
+.pm-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-dim);text-align:right;}
+.pm-val{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--acc-deep);margin-top:2px;text-align:right;}
+
+/* ── DARK STAGE + DRAWING SPINE (signature) ───────────────────────── */
+.stage{background:var(--ink);border:1px solid #24242B;border-radius:16px;padding:1.1rem 1.4rem 1.6rem;color:var(--cream);overflow:hidden;}
+.stage-bar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;padding:.2rem .1rem .9rem;border-bottom:1px solid var(--dline);margin-bottom:.4rem;}
+.stage-left{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap;}
+.stage-tag{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-mut);}
+.stage-tag::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--acc);animation:blink 1.7s ease-in-out infinite;}
+.stage-prog{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--cream-dim);}
+.stage-ctrls{display:flex;align-items:center;gap:.5rem;}
+.modeseg{display:inline-flex;border:1px solid var(--dline2);border-radius:9px;overflow:hidden;background:rgba(255,255,255,.03);}
+.modeseg button{font-family:var(--mono);font-size:10px;letter-spacing:.03em;padding:.46rem .76rem;background:transparent;border:none;color:var(--cream-mut);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.modeseg button:hover{color:var(--cream);}
+.modeseg button.on{background:var(--acc);color:#fff;font-weight:500;}
+.runbtn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:11px;font-weight:500;padding:.5rem 1rem;border-radius:9px;border:1px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer;transition:all .2s;}
+.runbtn:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.runbtn.is-running{background:transparent;color:#9fb4ff;}
+.runbtn .ic{font-size:9px;}
+.iconbtn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--dline2);background:transparent;color:var(--cream-mut);cursor:pointer;transition:all .2s;font-size:14px;}
+.iconbtn:hover{color:var(--cream);border-color:var(--acc);}
+
+.rail{overflow-x:auto;padding:.5rem .1rem 2.3rem;margin-top:.5rem;}
+.rail::-webkit-scrollbar{height:6px;}
+.rail::-webkit-scrollbar-thumb{background:var(--dline2);border-radius:3px;}
+.rail-inner{display:flex;align-items:flex-start;min-width:min-content;}
+.node-wrap{position:relative;flex:0 0 44px;display:flex;justify-content:center;cursor:pointer;}
+.st-node{width:32px;height:32px;border-radius:50%;border:2px solid var(--dline2);background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--cream-mut);position:relative;z-index:2;transition:.3s;flex-shrink:0;}
+.st-node .chk{display:none;font-size:13px;}
+.st-label{position:absolute;top:40px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:var(--mono);font-size:10px;color:var(--cream-dim);letter-spacing:.02em;transition:color .3s;}
+.conn-h{flex:0 0 74px;height:2px;background:var(--dline);margin-top:15px;position:relative;overflow:hidden;}
+.conn-h .cf{position:absolute;inset:0;background:var(--acc);transform:scaleX(0);transform-origin:left;transition:transform .6s ease;}
+.conn-h.done .cf{transform:scaleX(1);}
+.node-wrap:hover .st-label{color:var(--cream);}
+.node-wrap.done .st-node{background:var(--acc);border-color:var(--acc);color:#fff;}
+.node-wrap.done .st-node .num{display:none;}
+.node-wrap.done .st-node .chk{display:block;}
+.node-wrap.done .st-label{color:var(--cream-mut);}
+.node-wrap.active .st-node{border-color:var(--acc);color:#fff;box-shadow:0 0 0 4px var(--acc-soft);}
+.node-wrap.active .st-node::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1.5px solid var(--acc);animation:ping 1.9s ease-out infinite;}
+.node-wrap.active .st-label{color:#fff;font-weight:500;}
+
+/* active-step detail panel (below the rail) */
+.detail{background:rgba(255,255,255,.02);border:1px solid var(--dline);border-radius:12px;padding:1.3rem 1.45rem;min-width:0;}
+.detail>*{animation:fu .32s ease both;}
+.det-step{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:.55rem;}
+.det-title{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--cream);line-height:1.15;margin-bottom:.6rem;letter-spacing:-.01em;}
+.det-tool{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:9.5px;color:var(--acc-lt);border:1px solid var(--dline2);padding:.22rem .62rem;border-radius:20px;margin-bottom:1rem;}
+.det-tool::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+.det-body{font-size:13px;line-height:1.85;color:var(--cream-mut);margin-bottom:1.1rem;max-width:640px;}
+.tl-rules{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.rule-card{background:rgba(255,255,255,.035);border:1px solid var(--dline);border-left:2px solid var(--acc);border-radius:10px;padding:.8rem .95rem;}
+.rule-t{font-size:11.5px;font-weight:700;color:var(--cream);margin-bottom:4px;}
+.rule-d{font-size:11px;color:var(--cream-mut);line-height:1.6;}
+
+/* ── LIVE ACTIVITY CONSOLE (right of spine) ───────────────────────── */
+.stage-grid{display:grid;grid-template-columns:1fr 320px;gap:1.2rem;align-items:start;}
+.console{position:sticky;top:86px;background:#08080C;border:1px solid var(--dline);border-radius:12px;display:flex;flex-direction:column;max-height:72vh;overflow:hidden;}
+.con-head{display:flex;align-items:center;gap:.5rem;padding:.6rem .8rem;border-bottom:1px solid var(--dline);flex-shrink:0;}
+.con-dots{display:flex;gap:5px;}
+.con-dots i{width:8px;height:8px;border-radius:50%;background:var(--dline2);}
+.con-title{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-mut);}
+.con-live{margin-left:auto;display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc-lt);}
+.con-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--acc-lt);box-shadow:0 0 8px var(--acc-lt);animation:blink 1.4s infinite;}
+.con-body{padding:.75rem .85rem;overflow-y:auto;font-family:var(--mono);font-size:10.5px;line-height:1.65;color:var(--cream-mut);flex:1;}
+.con-body::-webkit-scrollbar{width:6px;}
+.con-body::-webkit-scrollbar-thumb{background:var(--dline2);border-radius:3px;}
+.log-blk{margin-bottom:.75rem;}
+.log-h{color:var(--cream);margin-bottom:.25rem;}
+.log-h .log-i{margin-right:.45rem;}
+.log-blk.done .log-h .log-i{color:var(--acc-lt);}
+.log-blk.active .log-h .log-i{color:var(--acc-lt);animation:blink 1s infinite;}
+.log-l{color:var(--cream-dim);padding-left:1.15rem;position:relative;}
+.log-l::before{content:'›';position:absolute;left:.25rem;color:var(--dline2);}
+.log-blk.done .log-l{color:var(--cream-mut);}
+.log-blk.done .log-l::before{content:'✓';color:var(--acc-lt);}
+.log-l.stream{animation:fu .3s ease both;}
+.log-out{padding-left:1.15rem;color:var(--acc-lt);margin-top:.2rem;}
+.log-out::before{content:'→ ';}
+.log-run{padding-left:1.15rem;color:var(--cream);display:flex;align-items:center;gap:.45rem;margin-top:.1rem;}
+.spin{width:9px;height:9px;border:1.5px solid var(--dline2);border-top-color:var(--acc-lt);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.cursor{display:inline-block;width:6px;height:12px;background:var(--acc-lt);margin-left:1px;animation:blink 1s steps(1) infinite;}
+.con-foot{color:var(--acc-lt);padding-top:.4rem;border-top:1px solid var(--dline);margin-top:.3rem;}
+
+/* produces line inside expanded step */
+.tl-prod{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--cream-dim);margin-top:.8rem;}
+.tl-prod span{color:var(--acc-lt);}
+
+/* example-output document (shown after run) */
+.con-body.is-output{padding:.75rem;}
+.doc{background:#FBFBF8;color:#1a1a1a;border-radius:8px;padding:1rem 1.1rem;animation:fu .4s ease both;}
+.doc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.55rem;}
+.doc-file{font-family:var(--mono);font-size:9px;color:#6b6b64;letter-spacing:.03em;}
+.doc-tag{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc-deep);border:1px solid rgba(43,83,221,.3);border-radius:20px;padding:.12rem .45rem;}
+.doc-title{font-family:var(--serif);font-size:18px;font-weight:700;color:#16161a;line-height:1.1;}
+.doc-meta{font-family:var(--mono);font-size:9px;color:#9c9c92;margin-top:.25rem;letter-spacing:.02em;}
+.doc-sec{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#9c9c92;margin:.9rem 0 .4rem;}
+.bar{display:flex;align-items:center;gap:.5rem;margin-bottom:.32rem;}
+.bar-l{width:64px;font-size:11px;color:#3a3a36;flex-shrink:0;}
+.bar-track{flex:1;height:7px;background:#ECEBE5;border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--acc);border-radius:4px;transform-origin:left;animation:grow .8s cubic-bezier(.5,0,.2,1) both;}
+@keyframes grow{from{transform:scaleX(0);}}
+.bar-v{width:30px;text-align:right;font-family:var(--mono);font-size:10px;color:#16161a;flex-shrink:0;}
+.doc-line{font-size:11.5px;color:#3a3a36;line-height:1.5;}
+.doc-note{font-size:11.5px;color:#3a3a36;line-height:1.5;font-style:italic;}
+.doc-foot{font-family:var(--mono);font-size:8.5px;color:#9c9c92;margin-top:.9rem;padding-top:.55rem;border-top:1px solid #E4E3DD;letter-spacing:.02em;}
+
+/* discovery detail section */
+.disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.disc-card{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:1.5rem 1.6rem;}
+.disc-h{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--tx);display:flex;align-items:baseline;gap:.6rem;margin-bottom:1rem;}
+.disc-num{font-family:var(--serif);font-size:22px;color:var(--acc-deep);}
+.disc-list{list-style:none;display:flex;flex-direction:column;gap:.65rem;}
+.disc-list li{font-size:12.5px;color:var(--tx-mut);line-height:1.5;padding-left:1.35rem;position:relative;}
+.disc-list li::before{content:'→';position:absolute;left:0;color:var(--acc);font-family:var(--mono);font-size:11px;}
+.disc-list li b{color:var(--tx);font-weight:700;}
+
+/* ── DATA FLOW + CALLOUT (light) ──────────────────────────────────── */
+.dataflow{margin-top:1rem;background:var(--card);border:1px solid var(--rule);border-radius:13px;padding:1.05rem 1.3rem;position:relative;overflow:hidden;}
+.dataflow::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:36%;background:linear-gradient(90deg,transparent,var(--acc),transparent);animation:sweep 3.6s linear infinite;}
+@keyframes sweep{0%{transform:translateX(-100%);}100%{transform:translateX(360%);}}
+.df-label{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-dim);margin-bottom:.65rem;}
+.df-flow{font-family:var(--mono);font-size:11px;color:var(--tx-mut);line-height:2;}
+.df-flow span{color:var(--acc-deep);}
+.df-flow .arr{color:var(--tx-dim);margin:0 .2rem;}
+.callout{margin-top:1rem;padding:.95rem 1.15rem;border-radius:12px;border-left:3px solid var(--acc);background:var(--acc-soft);font-size:12.5px;color:var(--tx-mut);line-height:1.7;}
+.callout strong{color:var(--tx);}
+.callout.amber{border-color:var(--gold);background:rgba(176,122,31,.08);color:#7A5414;}
+.callout.amber strong{color:#5E4010;}
+
+.footer{text-align:center;padding:2rem 1.5rem;font-family:var(--mono);font-size:10px;color:var(--cream-dim);letter-spacing:.1em;text-transform:uppercase;}
+
+@media(max-width:880px){
+  .topbar,.hero,.meta,.section{padding-left:1.5rem;padding-right:1.5rem;}
+  .meta{grid-template-columns:1fr 1fr;gap:1.2rem 0;}
+  .meta-item:nth-child(3),.meta-item:nth-child(4){padding-top:1.2rem;border-top:1px solid var(--dline);}
+  .meta-item:nth-child(3){border-left:none;padding-left:0;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .build-tabs{flex-direction:column;}
+  .ph-meta{display:none;}
+  .panel-header{flex-direction:column;gap:1rem;}
+  .tl-rules{grid-template-columns:1fr;}
+  .stage-grid{grid-template-columns:1fr;}
+  .console{position:static;max-height:320px;}
+  .disc-grid{grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+  .reveal{opacity:1;transform:none;}.mark::before{transform:scaleX(1);}
+}
+</style>
+</head>
+<body>
+
+<div class="band-dark">
+  <div class="topbar">
+    <div class="tb-left"><b>APPLY AI</b><span class="x">✕</span>TENEO CAMPAIGNING</div>
+    <div class="tb-pill">T2 Workflow Builds · v2</div>
+  </div>
+  <div class="hero">
+    <div class="hero-eyebrow">Campaigning · Tier 2 · In Build</div>
+    <h1 class="hero-title">Two builds.<br><span class="mark">Watch them run.</span></h1>
+    <p class="hero-sub">Two Campaigning builds, running entirely within Microsoft: Power Automate, Microsoft Foundry and Copilot Studio. Press Run flow on either build and watch it run step by step, in API or manual-upload mode, or click any step to jump straight to it.</p>
+  </div>
+  <div class="hero-div"></div>
+  <div class="meta">
+    <div class="meta-item"><div class="meta-label">Prepared for</div><div class="meta-val">Campaigning</div></div>
+    <div class="meta-item"><div class="meta-label">From</div><div class="meta-val">Apply AI</div></div>
+    <div class="meta-item"><div class="meta-label">Date</div><div class="meta-val">June 2026</div></div>
+    <div class="meta-item"><div class="meta-label">Status</div><div class="meta-val">Tier 2 · Approved for build</div></div>
+  </div>
+</div>
+
+<!-- 01 -->
+<div class="section">
+  <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">What the two builds deliver</h2></div>
+  <p class="sec-sub">Both are Campaigning builds and both run inside Teams. Between them they take two reporting jobs that consume whole days and hand them back as minutes.</p>
+  <div class="stats reveal">
+    <div class="stat"><div class="stat-n countup" data-to="2">0</div><div class="stat-rule"></div><div class="stat-l">Campaigning builds</div></div>
+    <div class="stat"><div class="stat-n countup" data-to="80" data-suffix=" hrs">0</div><div class="stat-rule"></div><div class="stat-l">Saved / month · SOV</div></div>
+    <div class="stat"><div class="stat-n"><span class="u">£</span><span class="countup" data-to="23">0</span><span class="u">k</span></div><div class="stat-rule"></div><div class="stat-l">Monthly saving · Tesco</div></div>
+    <div class="stat"><div class="stat-n countup" data-to="100" data-suffix="%">0</div><div class="stat-rule"></div><div class="stat-l">Inside Microsoft 365</div></div>
+  </div>
+</div>
+
+<!-- 02 -->
+<div class="section" style="padding-top:0;">
+  <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Watch them run</h2></div>
+  <p class="sec-sub">Pick a build, then press Run flow. The flow runs across as each step completes, or step through it yourself. Toggle between the API path and the manual CSV path at any time.</p>
+
+  <div class="build-tabs reveal">
+    <div class="btab active" onclick="switchBuild(1)">
+      <div class="btab-num">04</div>
+      <div class="btab-info">
+        <div class="btab-name">Share of Voice Reporting</div>
+        <div class="btab-meta">TESCO · POWER AUTOMATE · FOUNDRY · COPILOT STUDIO</div>
+      </div>
+    </div>
+    <div class="btab" onclick="switchBuild(2)">
+      <div class="btab-num">05</div>
+      <div class="btab-info">
+        <div class="btab-name">Social &amp; Digital Channel Audit</div>
+        <div class="btab-meta">CAMPAIGNING · POWER AUTOMATE · FOUNDRY · COPILOT STUDIO</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUILD 04 -->
+  <div class="build-panel active" id="panel1">
+    <div class="panel-header reveal">
+      <div class="ph-kick"></div>
+      <div class="ph-body">
+        <div class="ph-eyebrow">Build 04 · Financial Communications · Campaigning</div>
+        <div class="ph-title">Share of Voice Reporting (Tesco)</div>
+        <div class="ph-desc">Automates the monthly Tesco SOV report end to end. Pulls coverage from Signal AI, categorises every article using Microsoft Foundry GPT-5.4-mini, calculates share of voice across peer brands, and writes the completed Excel and PowerPoint automatically.</div>
+        <div class="ph-chips">
+          <span class="chip">Power Automate</span><span class="chip">Microsoft Foundry</span><span class="chip">GPT-5.4-mini</span><span class="chip">Signal AI API</span><span class="chip">Excel connector</span><span class="chip">PowerPoint connector</span><span class="chip">Copilot Studio</span><span class="chip chip-save">Saves £23,010 / month</span>
+        </div>
+      </div>
+      <div class="ph-meta">
+        <div><div class="pm-label">Runtime</div><div class="pm-val">6–12 min</div></div>
+        <div><div class="pm-label">Trigger</div><div class="pm-val" style="font-size:11px;color:var(--tx-mut);">Scheduled + manual</div></div>
+      </div>
+    </div>
+
+    <div class="stage reveal" id="stage1">
+      <div class="stage-bar">
+        <div class="stage-left">
+          <div class="stage-tag" id="tag1">Live flow</div>
+          <div class="stage-prog" id="prog1"></div>
+        </div>
+        <div class="stage-ctrls">
+          <div class="modeseg" id="seg1">
+            <button type="button" onclick="setMode(1,'api')">API</button>
+            <button type="button" class="on" onclick="setMode(1,'manual')">Manual · CSV</button>
+          </div>
+          <button type="button" class="runbtn" id="run1" onclick="run(1)"><span class="ic">▶</span><span class="lbl">Run flow</span></button>
+          <button type="button" class="iconbtn" onclick="restart(1)" title="Restart">↺</button>
+        </div>
+      </div>
+      <div class="rail" id="rail1"></div>
+      <div class="stage-grid">
+        <div class="detail" id="detail1"></div>
+        <aside class="console" id="con1">
+          <div class="con-head"><div class="con-dots"><i></i><i></i><i></i></div><span class="con-title" id="contitle1">Live activity</span><span class="con-live" id="conlive1">ready</span></div>
+          <div class="con-body" id="conbody1"></div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="dataflow reveal"><div class="df-label">Full data flow</div><div class="df-flow" id="flow1"></div></div>
+    <div class="callout amber reveal" id="callout1"></div>
+  </div>
+
+  <!-- BUILD 05 -->
+  <div class="build-panel" id="panel2">
+    <div class="panel-header reveal">
+      <div class="ph-kick"></div>
+      <div class="ph-body">
+        <div class="ph-eyebrow">Build 05 · Campaigning</div>
+        <div class="ph-title">Social &amp; Digital Channel Audit</div>
+        <div class="ph-desc">Automates the six-monthly social channel audit across LinkedIn, X and Instagram. Evan triggers the audit in Teams, selects the client, and the pipeline pulls post data, engagement metrics and follower counts across client and competitor accounts, returning a structured audit report without leaving Teams.</div>
+        <div class="ph-chips">
+          <span class="chip">Power Automate</span><span class="chip">Microsoft Foundry</span><span class="chip">GPT-5.4</span><span class="chip chip-amber">LinkedIn API</span><span class="chip chip-amber">X API</span><span class="chip chip-amber">Instagram API</span><span class="chip">Copilot Studio</span><span class="chip chip-save">Saves £1,062 / audit</span>
+        </div>
+      </div>
+      <div class="ph-meta">
+        <div><div class="pm-label">Trigger</div><div class="pm-val" style="font-size:11px;color:var(--tx-mut);">Manual · Evan</div></div>
+        <div><div class="pm-label">Frequency</div><div class="pm-val" style="font-size:11px;color:var(--tx-mut);">6-monthly</div></div>
+      </div>
+    </div>
+
+    <div class="stage reveal" id="stage2">
+      <div class="stage-bar">
+        <div class="stage-left">
+          <div class="stage-tag" id="tag2">Live flow</div>
+          <div class="stage-prog" id="prog2"></div>
+        </div>
+        <div class="stage-ctrls">
+          <div class="modeseg" id="seg2">
+            <button type="button" onclick="setMode(2,'api')">API</button>
+            <button type="button" class="on" onclick="setMode(2,'manual')">Manual · CSV</button>
+          </div>
+          <button type="button" class="runbtn" id="run2" onclick="run(2)"><span class="ic">▶</span><span class="lbl">Run flow</span></button>
+          <button type="button" class="iconbtn" onclick="restart(2)" title="Restart">↺</button>
+        </div>
+      </div>
+      <div class="rail" id="rail2"></div>
+      <div class="stage-grid">
+        <div class="detail" id="detail2"></div>
+        <aside class="console" id="con2">
+          <div class="con-head"><div class="con-dots"><i></i><i></i><i></i></div><span class="con-title" id="contitle2">Live activity</span><span class="con-live" id="conlive2">ready</span></div>
+          <div class="con-body" id="conbody2"></div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="dataflow reveal"><div class="df-label">Full data flow</div><div class="df-flow" id="flow2"></div></div>
+    <div class="callout amber reveal" id="callout2"></div>
+  </div>
+</div>
+
+<!-- 03 -->
+<div class="section" style="padding-top:0;">
+  <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">What we lock in discovery</h2></div>
+  <p class="sec-sub">A short, focused discovery per build pins down the logic and the access each flow depends on. These are decisions, not development; once they're agreed, the build is configuration.</p>
+  <div class="disc-grid reveal">
+    <div class="disc-card">
+      <div class="disc-h"><span class="disc-num">04</span> Share of Voice Reporting</div>
+      <ul class="disc-list">
+        <li><b>Boolean query</b>: exact Tesco and peer-brand search strings, plus the reporting window</li>
+        <li><b>Relevance &amp; dedup rules</b>: minimum relevance score and how duplicates are removed</li>
+        <li><b>Categorisation logic</b>: the system prompt must replicate the rules Jonny &amp; Lucy apply by hand today; this is the most important decision</li>
+        <li><b>Signal AI access</b>: confirm API route, or the SharePoint folder for the CSV fallback</li>
+        <li><b>Template mapping</b>: every figure mapped to its Excel named range and PowerPoint placeholder</li>
+        <li><b>Distribution</b>: who reviews in Teams and how the client receives the final files</li>
+      </ul>
+    </div>
+    <div class="disc-card">
+      <div class="disc-h"><span class="disc-num">05</span> Social &amp; Digital Channel Audit</div>
+      <ul class="disc-list">
+        <li><b>Account list</b>: client and competitor handles for LinkedIn, X and Instagram, owned by Evan in SharePoint</li>
+        <li><b>Platform access</b>: LinkedIn API tier, X paid tier, and Instagram's 2–4 week Meta app review (or the CSV path per platform)</li>
+        <li><b>Metrics set</b>: the followers, engagement and top-post fields captured per platform</li>
+        <li><b>Analysis framework</b>: theme categories, benchmarking method, C-suite criteria and output format</li>
+        <li><b>Report structure</b>: sections, benchmarking table and recommendations layout</li>
+        <li><b>Delivery</b>: confirmed as the Copilot Studio chat in Teams, with follow-up questions supported</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="band-dark"><div class="footer">Apply AI ✕ Teneo Campaigning · T2 Workflow Builds · Confidential</div></div>
+
+<script>
+const D = {
+  1: [
+    {n:"Trigger",t:"Scheduled trigger fires",tool:"Power Automate",
+      b:"The Power Automate flow is set to run on the first working day of every month at 6am. No one needs to do anything. The flow wakes up, checks the date and begins. Jonny or Lucy can also trigger it manually from Copilot Studio in Teams if they need to re-run outside the schedule.",
+      rules:[{t:"No manual action needed",d:"The scheduled trigger means the report starts running before the team arrives at their desks."},{t:"Manual override available",d:"Jonny or Lucy type 'run SOV report' in the Copilot Studio Teams chat to kick it off on demand."}],
+      m:{t:"Triggered by CSV upload to SharePoint",tool:"Power Automate (SharePoint file trigger)",
+        b:"In manual mode there is no scheduled run. Jonny or Lucy export the previous month's coverage from Signal AI as a CSV and drop it into the designated SharePoint folder. Power Automate's 'when a file is created' trigger fires the moment the file lands, and the flow begins. Dropping the file in is the only manual action required all month.",
+        rules:[{t:"The upload is the trigger",d:"No schedule to watch; the flow starts itself the moment the CSV appears in the agreed SharePoint folder."},{t:"Folder agreed once in discovery",d:"Jonny and Lucy confirm the destination folder during discovery. From then on it's drag, drop, done."}]}},
+    {n:"Signal AI pull",t:"Coverage data pulled from Signal AI",tool:"Power Automate HTTP connector",
+      b:"Power Automate calls the Signal AI API with the agreed boolean query: Tesco brand terms, peer brand terms and a date range covering the previous month. Signal AI returns a structured JSON array of articles including title, source, date, URL and sentiment score. If Signal AI API is unavailable, Jonny or Lucy upload a CSV export to a designated SharePoint folder and the flow picks it up automatically.",
+      rules:[{t:"Boolean query agreed in discovery",d:"The exact query strings for Tesco and each peer brand are defined during the discovery phase and locked into the flow."},{t:"CSV fallback built in",d:"If the API route is not confirmed, the flow watches a SharePoint folder for a CSV upload instead."}],
+      m:{n:"Read CSV",t:"Coverage CSV read and parsed",tool:"Power Automate (SharePoint + parse)",
+        b:"Power Automate reads the uploaded CSV and parses each row into the same structured shape the Signal AI API would have returned: title, source, date, URL and sentiment. From this point on the flow is identical to the API version: same cleaning, same categorisation, same outputs. One flow, two front doors.",
+        rules:[{t:"Identical from here on",d:"The CSV read feeds the exact same cleaning step as the API pull. Nothing downstream is rebuilt or duplicated."},{t:"Column mapping set in discovery",d:"Signal AI's export headers are mapped once so parsing is reliable every month."}]}},
+    {n:"Clean data",t:"Data cleaned and structured",tool:"Power Automate (filter + compose)",
+      b:"The flow filters out duplicate articles, removes items below the minimum relevance threshold agreed in discovery, and strips articles flagged as bot-generated by Signal AI. The output is a clean array of relevant articles ready for categorisation. This all happens inside Power Automate using built-in filter and compose actions.",
+      rules:[{t:"Relevance threshold set in discovery",d:"Jonny and Lucy agree the minimum relevance score during the discovery workshop."},{t:"Deduplication automatic",d:"The filter action removes duplicates by URL before passing to categorisation."}]},
+    {n:"Categorise",t:"Articles categorised by GPT-5.4-mini",tool:"Microsoft Foundry HTTP connector",
+      b:"Power Automate loops through each article and sends the title, source and snippet to Microsoft Foundry GPT-5.4-mini with the categorisation system prompt. The model returns a single category label for each article: Brand, Competitor, Industry, Crisis or Other. GPT-5.4-mini is used here because this is a high-volume, repetitive classification task where speed and cost matter more than deep reasoning.",
+      rules:[{t:"Categorisation rules agreed in discovery",d:"The system prompt must exactly replicate the manual logic Jonny and Lucy currently apply by hand. This is the most important step in discovery."},{t:"HTTP connector only",d:"This is a form you fill in inside Power Automate: endpoint URL, API key, message body."}]},
+    {n:"SOV calc",t:"Share of voice calculated",tool:"Power Automate (variables + expressions)",
+      b:"The flow uses Power Automate variables and built-in expression functions to count articles per brand per category, calculate percentage share of voice, and compare against the previous month. All maths happens inside the flow using the built-in expression builder. Results written to a SharePoint list as a structured data table.",
+      rules:[{t:"Handled in the expression builder",d:"Power Automate's expression builder handles all the arithmetic: counts, percentages and comparisons, including the month-on-month delta."},{t:"Month-on-month comparison",d:"Previous month figures read from the SharePoint list and included in the calculation automatically."}]},
+    {n:"Excel output",t:"Excel template populated",tool:"Office 365 Excel connector",
+      b:"Power Automate opens the Tesco SOV Excel template stored in SharePoint and writes the calculated figures into the named ranges. The Excel connector updates specific cells, adds rows to the data table and triggers formula recalculation. The completed file is saved as a new versioned copy in the client folder; the original template is never overwritten.",
+      rules:[{t:"Template stays in SharePoint",d:"Jonny and Lucy own the template. Apply AI writes into it using the native Excel connector."},{t:"Formula recalculation triggered",d:"The connector forces Excel to recalculate all dependent formulas after the data is written."}]},
+    {n:"PPT output",t:"PowerPoint deck populated",tool:"Office 365 PowerPoint connector",
+      b:"Power Automate opens the Tesco SOV PowerPoint template and populates the slide placeholders: SOV percentages, brand rankings, month-on-month movement, key findings. The completed deck is saved alongside the Excel file in the client SharePoint folder.",
+      rules:[{t:"Template placeholders defined in discovery",d:"Every figure and chart mapped to its target slide and placeholder during the design phase."},{t:"Branded template untouched",d:"The PowerPoint template belongs to Teneo. Apply AI populates it. Formatting stays exactly as designed."}]},
+    {n:"Notify",t:"Notification sent to Jonny and Lucy",tool:"Power Automate Teams connector",
+      b:"Once the Excel and PowerPoint files are saved, Power Automate sends a Teams message to Jonny and Lucy confirming the monthly run is complete. The message includes direct links to both completed files in SharePoint. They can open, review and send to the client immediately.",
+      rules:[{t:"Links to files included",d:"No hunting in SharePoint; the notification contains clickable links directly to the completed Excel and PowerPoint."},{t:"Error notification too",d:"If anything failed in the flow, a separate error notification is sent with the step that failed so it can be fixed quickly."}]},
+    {n:"Review",t:"Review and distribute via Copilot Studio",tool:"Copilot Studio (Teams)",
+      b:"Jonny or Lucy open the Copilot Studio agent in Teams to review the output. They can ask the agent to summarise the key findings, compare against previous months or flag any anomalies. The agent reads from the SharePoint data list. Once happy, they download the files and distribute to the Tesco client team as per the existing process.",
+      rules:[{t:"Same Teams interface throughout",d:"Everything (triggering, reviewing, distributing) happens inside Teams. No switching environments."},{t:"Agent reads live SharePoint data",d:"The Copilot Studio agent always reads the latest run data, not a cached snapshot."}]},
+  ],
+  2: [
+    {n:"Trigger",t:"Evan triggers the audit in Teams",tool:"Copilot Studio (Teams)",
+      b:"Evan opens the Copilot Studio agent in Teams and selects which client to audit. The agent confirms the account list (client and competitor handles across LinkedIn, X and Instagram) from the SharePoint account list and asks Evan to confirm before the run begins. Evan types one confirmation and the pipeline starts.",
+      rules:[{t:"Client selection drives the run",d:"The audit is always client-specific. Evan selects the client name and the agent pulls the correct account list from SharePoint."},{t:"Confirmation step built in",d:"The agent shows Evan the account list before starting so nothing unexpected gets pulled."}]},
+    {n:"Read accounts",t:"Account list read from SharePoint",tool:"Power Automate SharePoint connector",
+      b:"The flow reads the account list for the selected client from a SharePoint list. This list stores the LinkedIn company page, X handle and Instagram handle for the client and each agreed competitor. Evan can update this list at any time by editing the SharePoint list directly; no help from Apply AI needed.",
+      rules:[{t:"Evan owns the account list",d:"The SharePoint list is a simple table Evan can edit himself. Adding a new competitor takes 30 seconds."},{t:"Drives all three platform pulls",d:"The same account list feeds the LinkedIn, X and Instagram ingestion steps."}]},
+    {n:"LinkedIn pull",t:"LinkedIn data pulled",tool:"Power Automate HTTP connector + LinkedIn API",
+      b:"For each LinkedIn account in the list, the flow calls the LinkedIn API and retrieves follower count, post count for the period, total impressions, total engagements, engagement rate and the top 10 posts by engagement. If LinkedIn API access is unavailable, Evan exports the analytics as a CSV from the LinkedIn Company Page admin dashboard and uploads to a designated SharePoint folder.",
+      rules:[{t:"API access to be confirmed in discovery",d:"LinkedIn API tier and rate limits must be confirmed before build. CSV fallback built regardless."},{t:"Top 10 posts captured",d:"The 10 highest-engagement posts per account are stored for theme analysis in the GPT step."}],
+      m:{n:"LinkedIn CSV",t:"LinkedIn export uploaded by Evan",tool:"LinkedIn Company Page export → SharePoint",
+        b:"If LinkedIn API access isn't available, Evan exports the analytics CSV from the LinkedIn Company Page admin dashboard (for the client and each competitor) and uploads them to the audit's SharePoint folder. Power Automate reads the files and extracts the same metrics: follower count, post count, impressions, engagements, engagement rate and top posts.",
+        rules:[{t:"Native LinkedIn export",d:"The Company Page admin dashboard exports analytics as CSV directly. No third-party tool required."},{t:"Same shape downstream",d:"API-pulled or CSV-read, the LinkedIn data reaches GPT-5.4 in identical structure."}]}},
+    {n:"X pull",t:"X data pulled",tool:"Power Automate HTTP connector + X API",
+      b:"For each X account in the list, the flow calls the X API and retrieves follower count, tweet count for the period, total impressions, total engagements, engagement rate and the top 10 tweets by engagement. API calls are staggered inside the flow to respect X rate limits. If X API access is unavailable, Evan exports from X Analytics and uploads to SharePoint.",
+      rules:[{t:"Rate limit staggering built in",d:"The flow pauses between calls to avoid hitting X API rate limits. No manual intervention needed."},{t:"Paid API tier required",d:"X free tier does not support the data volume required. Paid tier must be confirmed before build."}],
+      m:{n:"X CSV",t:"X export uploaded by Evan",tool:"X Analytics export → SharePoint",
+        b:"Evan exports the analytics CSV from X Analytics for each account and uploads to SharePoint. Power Automate reads the files and extracts follower count, tweet count, impressions, engagements, engagement rate and top tweets, the same fields the API would have returned. No paid X API tier needed in this mode.",
+        rules:[{t:"No paid API tier",d:"Manual export sidesteps the X paid API requirement entirely, useful if the API cost isn't approved."},{t:"Same shape downstream",d:"The consolidation and GPT-5.4 steps don't know or care whether the data came from the API or a CSV."}]}},
+    {n:"Instagram pull",t:"Instagram data pulled",tool:"Power Automate HTTP connector + Instagram Graph API",
+      b:"For each Instagram account in the list, the flow calls the Instagram Graph API via Teneo's Meta Business account and retrieves follower count, post count, total reach, total engagements and engagement rate. Instagram requires a Meta app review before the API can be called; this takes 2 to 4 weeks and should be started immediately once the API route is confirmed.",
+      rules:[{t:"Meta app review required",d:"Apply AI raises the app review request as soon as the Instagram API route is confirmed in discovery. 2 to 4 week lead time."},{t:"Sprout Social or Hootsuite alternative",d:"If Meta review delays the build, a Sprout Social or Hootsuite connector can provide Instagram data without direct API access."}],
+      m:{n:"Instagram CSV",t:"Instagram export uploaded by Evan",tool:"Meta / Sprout export → SharePoint",
+        b:"Evan exports Instagram insights (from Meta Business Suite or Sprout Social) for each account and uploads to SharePoint. Power Automate reads the files for follower count, post count, reach, engagements and engagement rate. Crucially this path needs no Meta app review, so it's available from day one with no 2 to 4 week wait.",
+        rules:[{t:"No Meta app review",d:"The manual path skips the 2 to 4 week Meta app review entirely, the single biggest timeline risk on the API path."},{t:"Available day one",d:"If the audit is needed before API access lands, the CSV path delivers the same report immediately."}]}},
+    {n:"Consolidate",t:"Data consolidated across all platforms",tool:"Power Automate (compose + select)",
+      b:"The flow merges the LinkedIn, X and Instagram data for each account into a single structured JSON object, one per account, covering all three platforms. This consolidated object is what gets passed to Microsoft Foundry GPT-5.4 for analysis. Power Automate's compose and select actions handle the data merging.",
+      rules:[{t:"One object per account",d:"Client data and each competitor's data are packaged separately so the GPT can benchmark them against each other clearly."},{t:"Source metadata preserved",d:"Platform, date range and account handle carried through to the analysis step for source attribution in the report."}]},
+    {n:"Analyse",t:"GPT-5.4 analyses and benchmarks",tool:"Microsoft Foundry HTTP connector + GPT-5.4",
+      b:"The consolidated data is sent to Microsoft Foundry GPT-5.4 with the analysis system prompt. The model categorises post themes, calculates comparative engagement rates, identifies C-suite presence, spots white space in the competitor set and drafts benchmarked recommendations. GPT-5.4 rather than mini is used here because the social audit requires nuanced multi-platform reasoning, not just classification.",
+      rules:[{t:"System prompt agreed in discovery",d:"The analysis framework (theme categories, benchmarking methodology, C-suite criteria, output format) is all defined with Evan before build."},{t:"HTTP connector only",d:"Same as the SOV build: a form inside Power Automate. Endpoint URL, API key, message body."}]},
+    {n:"Report",t:"Audit report assembled and delivered",tool:"Copilot Studio (Teams)",
+      b:"Power Automate assembles the audit report from the GPT-5.4 analysis. The report follows the structure agreed in discovery: executive summary, platform breakdown per account, competitor benchmarking table, C-suite presence analysis, theme analysis and recommendations. The completed report is saved to SharePoint and returned to Evan in the Copilot Studio Teams chat. Evan can ask follow-up questions directly in the chat.",
+      rules:[{t:"Delivered in Teams chat",d:"Evan never leaves Teams. The report appears in the same conversation where he triggered the audit."},{t:"Follow-up questions supported",d:"Evan can ask the agent which competitor is strongest on LinkedIn or what themes the client is missing and get an answer from the audit data."}]},
+  ]
+};
+
+const act={1:0,2:0}, running={1:false,2:false}, cancel={1:false,2:false}, mode={1:'manual',2:'manual'}, finished={1:false,2:false};
+function eff(n){ return D[n].map(s=> (mode[n]==='manual'&&s.m) ? {...s,...s.m} : s ); }
+
+/* per-step live-activity log lines + produced artifact (manual variants where the step differs) */
+const LOG={
+  1:[
+    {lg:["Schedule check · 1st working day 06:00","Flow woken, beginning run"],out:"Run started",
+      m:{lg:["Watching SharePoint folder","CSV detected · file-created trigger fired"],out:"Upload detected"}},
+    {lg:["GET · Signal AI API","Query: Tesco + 5 peers · last 30 days","Parsing JSON response"],out:"247 articles returned",
+      m:{lg:["Reading upload from SharePoint","Parsing CSV rows → JSON"],out:"247 rows parsed"}},
+    {lg:["Filtering duplicates by URL","Dropping below relevance threshold","Removing bot-flagged items"],out:"212 clean articles"},
+    {lg:["Looping articles → GPT-5.4-mini","Labelling Brand / Competitor / Industry…"],out:"212 articles categorised"},
+    {lg:["Counting per brand × category","Computing % share of voice","Comparing vs previous month"],out:"SOV table built"},
+    {lg:["Opening Tesco SOV Excel template","Writing named ranges · recalculating"],out:"Tesco_SOV_Jun.xlsx"},
+    {lg:["Opening SOV deck template","Populating slide placeholders"],out:"Tesco_SOV_Jun.pptx"},
+    {lg:["Posting to Teams · Jonny & Lucy","Attaching links to both files"],out:"Teams notification sent"},
+    {lg:["Copilot Studio reading SharePoint","Summary ready · awaiting review"],out:"Ready to distribute"},
+  ],
+  2:[
+    {lg:["Evan opens Copilot Studio · Teams","Client selected · confirming accounts"],out:"Run confirmed"},
+    {lg:["Reading SharePoint account list","Loading client + competitor handles"],out:"4 accounts × 3 platforms"},
+    {lg:["GET · LinkedIn API","Followers · posts · impressions · top 10"],out:"LinkedIn metrics captured",
+      m:{lg:["Reading LinkedIn export · SharePoint","Extracting metrics from CSV"],out:"LinkedIn metrics captured"}},
+    {lg:["GET · X API (staggered)","Followers · tweets · impressions · top 10"],out:"X metrics captured",
+      m:{lg:["Reading X Analytics export","Extracting metrics from CSV"],out:"X metrics captured"}},
+    {lg:["GET · Instagram Graph API","Reach · engagements · followers"],out:"Instagram metrics captured",
+      m:{lg:["Reading Meta / Sprout export","Extracting metrics from CSV"],out:"Instagram metrics captured"}},
+    {lg:["Merging 3 platforms per account","Composing one JSON object each"],out:"Consolidated dataset"},
+    {lg:["Sending to GPT-5.4 · Foundry","Benchmarking · themes · white space"],out:"Benchmarked analysis"},
+    {lg:["Assembling audit sections","Saving to SharePoint · posting to Teams"],out:"Audit report delivered"},
+  ]
+};
+
+const META={
+  1:{
+    api:{tag:'Live flow · API',calloutClass:'callout amber',
+      flow:`<span>Signal AI API</span><span class="arr"> → </span>Power Automate (pull + clean)<span class="arr"> → </span><span>GPT-5.4-mini</span> (categorise)<span class="arr"> → </span>Power Automate (SOV calc)<span class="arr"> → </span><span>Excel API</span> (populate)<span class="arr"> → </span><span>PowerPoint API</span> (populate)<span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (notify Jonny / Lucy)`,
+      callout:`Signal AI API access to be confirmed in discovery. If unavailable, switch to <strong>Manual · CSV</strong> above; Jonny or Lucy upload a Signal AI export to SharePoint and the flow runs identically from there.`},
+    manual:{tag:'Live flow · Manual CSV',calloutClass:'callout',
+      flow:`<span>Signal AI CSV export</span> (Jonny / Lucy)<span class="arr"> → </span><span>SharePoint</span> (upload)<span class="arr"> → </span>Power Automate (read + clean)<span class="arr"> → </span><span>GPT-5.4-mini</span> (categorise)<span class="arr"> → </span>Power Automate (SOV calc)<span class="arr"> → </span><span>Excel API</span><span class="arr"> → </span><span>PowerPoint API</span><span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (notify)`,
+      callout:`No API dependency. The only manual action is dropping the Signal AI CSV export into SharePoint once a month; everything after the upload is byte-for-byte identical to the API flow. This is the zero-risk path if Signal AI API access isn't confirmed.`}
+  },
+  2:{
+    api:{tag:'Live flow · API',calloutClass:'callout amber',
+      flow:`<span>Evan triggers</span> in Teams<span class="arr"> → </span>Copilot Studio<span class="arr"> → </span>Power Automate<span class="arr"> → </span><span>LinkedIn + X + Instagram APIs</span><span class="arr"> → </span><span>GPT-5.4</span> (analyse + benchmark)<span class="arr"> → </span>Report assembled<span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (deliver to Evan)`,
+      callout:`LinkedIn, X and Instagram API access to be confirmed in discovery; Instagram in particular needs a 2 to 4 week Meta app review. Switch to <strong>Manual · CSV</strong> above to see the no-API path.`},
+    manual:{tag:'Live flow · Manual CSV',calloutClass:'callout',
+      flow:`<span>Evan triggers</span> in Teams<span class="arr"> → </span>Copilot Studio<span class="arr"> → </span>Power Automate<span class="arr"> → </span><span>LinkedIn + X + Instagram CSV exports</span> (Evan)<span class="arr"> → </span><span>SharePoint</span><span class="arr"> → </span><span>GPT-5.4</span> (analyse + benchmark)<span class="arr"> → </span>Report<span class="arr"> → </span><span>Teams</span> (deliver)`,
+      callout:`No API dependency and no Meta app review. Evan exports each platform's native analytics CSV and uploads to SharePoint; the flow reads them and the GPT-5.4 analysis is identical. Slightly more manual effort per audit, but available from day one.`}
+  }
+};
+
+/* example output shown once the flow completes (illustrative sample figures) */
+function barRows(rows){
+  const max=Math.max(...rows.map(r=>r.v));
+  return rows.map((r,i)=>`<div class="bar"><span class="bar-l">${r.l}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.round(r.v/max*100)}%;animation-delay:${(0.1+i*0.08).toFixed(2)}s"></span></span><span class="bar-v">${r.d||r.v+'%'}</span></div>`).join('');
+}
+const OUTPUT={
+  1:`<div class="doc">
+    <div class="doc-top"><span class="doc-file">Tesco_SOV_Jun.xlsx · .pptx</span><span class="doc-tag">Sample</span></div>
+    <div class="doc-title">Share of Voice · Tesco</div>
+    <div class="doc-meta">June 2026 · 212 articles · 5 peers</div>
+    <div class="doc-sec">Share of voice</div>
+    ${barRows([{l:'Tesco',v:34},{l:'Aldi',v:21},{l:'Lidl',v:18},{l:"Sainsbury's",v:15},{l:'Asda',v:12}])}
+    <div class="doc-sec">Month on month</div>
+    <div class="doc-line">Tesco ▲ +3 pts · Aldi ▼ −2 pts · Lidl ▲ +1 pt</div>
+    <div class="doc-sec">Key finding</div>
+    <div class="doc-note">Tesco leads on value-led coverage; the gap is widening on own-brand and price-match stories.</div>
+    <div class="doc-foot">Excel + PowerPoint saved to SharePoint · links posted to Teams</div>
+  </div>`,
+  2:`<div class="doc">
+    <div class="doc-top"><span class="doc-file">channel-audit.pdf</span><span class="doc-tag">Sample</span></div>
+    <div class="doc-title">Social &amp; Digital Channel Audit</div>
+    <div class="doc-meta">Client + 3 competitors · LinkedIn · X · Instagram</div>
+    <div class="doc-sec">Engagement rate vs competitor avg</div>
+    ${barRows([{l:'LinkedIn',v:42,d:'4.2%'},{l:'X',v:19,d:'1.9%'},{l:'Instagram',v:36,d:'3.6%'}])}
+    <div class="doc-sec">Followers</div>
+    <div class="doc-line">LinkedIn 48.2k · X 22.1k · Instagram 31.7k</div>
+    <div class="doc-sec">White space</div>
+    <div class="doc-note">No competitor owns C-suite thought leadership on LinkedIn, a clear opening for the client.</div>
+    <div class="doc-foot">Report delivered in the Teams chat · follow-up questions supported</div>
+  </div>`
+};
+
+function renderRail(n){
+  const steps=eff(n);
+  let h='<div class="rail-inner">';
+  steps.forEach((s,i)=>{
+    h+=`<div class="node-wrap" id="nw-${n}-${i}" onclick="jump(${n},${i})"><div class="st-node"><span class="num">${i+1}</span><span class="chk">✓</span></div><div class="st-label">${s.n}</div></div>`;
+    if(i<steps.length-1) h+=`<div class="conn-h" id="cn-${n}-${i}"><span class="cf"></span></div>`;
+  });
+  h+='</div>';
+  document.getElementById('rail'+n).innerHTML=h;
+}
+
+function renderDetail(n){
+  const s=eff(n)[act[n]];
+  const Lk=LOG[n][act[n]]||{}; const out=(mode[n]==='manual'&&Lk.m)?Lk.m.out:(Lk.out||'output');
+  document.getElementById('detail'+n).innerHTML=`
+    <div class="det-step">Step ${act[n]+1} / ${D[n].length} · ${s.n}</div>
+    <div class="det-title">${s.t}</div>
+    <div class="det-tool">${s.tool}</div>
+    <div class="det-body">${s.b}</div>
+    <div class="tl-rules">${s.rules.map(r=>`<div class="rule-card"><div class="rule-t">${r.t}</div><div class="rule-d">${r.d}</div></div>`).join('')}</div>
+    <div class="tl-prod">Produces <span>${out}</span></div>`;
+}
+
+function applyStates(n){
+  const i=act[n], N=D[n].length;
+  for(let k=0;k<N;k++){
+    const w=document.getElementById(`nw-${n}-${k}`);
+    if(!w) continue;
+    w.classList.remove('pending','active','done');
+    w.classList.add(k<i?'done':k===i?'active':'pending');
+  }
+  for(let k=0;k<N-1;k++){
+    const c=document.getElementById(`cn-${n}-${k}`);
+    if(c) c.classList.toggle('done',k<i);
+  }
+  const prog=document.getElementById('prog'+n);
+  if(prog) prog.textContent=`· Step ${i+1} / ${N}`;
+}
+
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+async function run(n){
+  if(running[n]){ pauseRun(n); return; }
+  running[n]=true; cancel[n]=false; finished[n]=false; setRunBtn(n,true); renderConsole(n);
+  if(act[n]>=D[n].length-1){ setStep(n,0); await wait(600); }
+  while(running[n] && act[n]<D[n].length-1){
+    await wait(2900);
+    if(!running[n]) break;
+    setStep(n,act[n]+1);
+  }
+  if(running[n] && act[n]===D[n].length-1) finished[n]=true;
+  running[n]=false; setRunBtn(n,false); renderConsole(n);
+}
+function pauseRun(n){ running[n]=false; cancel[n]=true; setRunBtn(n,false); renderConsole(n); }
+function restart(n){ pauseRun(n); setStep(n,0); setTimeout(()=>run(n),140); }
+function setRunBtn(n,on){
+  const b=document.getElementById('run'+n);
+  b.classList.toggle('is-running',on);
+  b.querySelector('.ic').textContent=on?'❚❚':'▶';
+  b.querySelector('.lbl').textContent=on?'Pause':'Run flow';
+}
+
+function renderConsole(n){
+  const title=document.getElementById('contitle'+n);
+  const live=document.getElementById('conlive'+n);
+  const body=document.getElementById('conbody'+n);
+  if(finished[n]){
+    if(title) title.textContent='Example output';
+    if(live) live.textContent='sample';
+    body.classList.add('is-output');
+    body.innerHTML=OUTPUT[n]||'';
+    requestAnimationFrame(()=>{ body.scrollTop=0; });
+    return;
+  }
+  body.classList.remove('is-output');
+  if(title) title.textContent='Live activity';
+  const steps=eff(n), i=act[n];
+  let html='';
+  for(let k=0;k<=i;k++){
+    const s=steps[k], L=LOG[n][k]||{lg:[],out:'done'};
+    const lm=(mode[n]==='manual'&&L.m)?L.m:L;
+    if(k===i){
+      html+=`<div class="log-blk active"><div class="log-h"><span class="log-i">●</span>[${k+1}] ${s.n}</div>`;
+      lm.lg.forEach((l,j)=>{ html+=`<div class="log-l stream" style="animation-delay:${(0.05+j*0.13).toFixed(2)}s">${l}</div>`; });
+      html+=`<div class="log-run"><span class="spin"></span>running…<span class="cursor"></span></div></div>`;
+    }else{
+      html+=`<div class="log-blk done"><div class="log-h"><span class="log-i">✓</span>[${k+1}] ${s.n}</div>`;
+      lm.lg.forEach(l=>{ html+=`<div class="log-l">${l}</div>`; });
+      html+=`<div class="log-out">${lm.out}</div></div>`;
+    }
+  }
+  body.innerHTML=html;
+  if(live) live.textContent = running[n] ? 'running' : 'ready';
+  requestAnimationFrame(()=>{ body.scrollTop=body.scrollHeight; });
+}
+
+function setStep(n,i){
+  act[n]=i; finished[n]=false; applyStates(n); renderDetail(n); renderConsole(n);
+  if(running[n]){
+    const w=document.getElementById(`nw-${n}-${i}`), rail=document.getElementById('rail'+n);
+    if(w&&rail){ rail.scrollTo({left:w.offsetLeft-rail.clientWidth/2+w.offsetWidth/2,behavior:'smooth'}); }
+  }
+}
+function jump(n,i){ pauseRun(n); setStep(n,i); }
+
+function switchBuild(n){
+  document.querySelectorAll('.build-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.btab').forEach(t=>t.classList.remove('active'));
+  const panel=document.getElementById('panel'+n);
+  panel.classList.add('active');
+  document.querySelectorAll('.btab')[n-1].classList.add('active');
+  panel.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+}
+
+function renderMeta(n){
+  const meta=META[n][mode[n]];
+  document.getElementById('tag'+n).textContent=meta.tag;
+  document.getElementById('flow'+n).innerHTML=meta.flow;
+  const c=document.getElementById('callout'+n);
+  c.className=meta.calloutClass+' reveal in';
+  c.innerHTML=meta.callout;
+}
+
+function setMode(n,m){
+  if(mode[n]===m) return;
+  pauseRun(n); mode[n]=m;
+  const seg=document.getElementById('seg'+n).children;
+  seg[0].classList.toggle('on',m==='api');
+  seg[1].classList.toggle('on',m==='manual');
+  renderRail(n); applyStates(n); renderDetail(n); renderMeta(n); renderConsole(n);
+}
+
+function countUp(){
+  document.querySelectorAll('.countup').forEach(el=>{
+    const to=+el.dataset.to, suf=el.dataset.suffix||'';
+    const dur=1100, t0=performance.now();
+    function f(now){
+      const p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(to*e)+suf;
+      if(p<1) requestAnimationFrame(f);
+    }
+    requestAnimationFrame(f);
+  });
+}
+function setupReveal(){
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  setTimeout(()=>document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')),1500);
+}
+
+function initAll(){
+  [1,2].forEach(n=>{ renderRail(n); applyStates(n); renderDetail(n); renderMeta(n); renderConsole(n); });
+  countUp(); setupReveal();
+  document.querySelector('.build-panel.active').querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+}
+initAll();
+</script>
+</body>
+</html>

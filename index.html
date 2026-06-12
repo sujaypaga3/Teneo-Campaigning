@@ -118,7 +118,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--tx);-webkit-fon
 .iconbtn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--dline2);background:transparent;color:var(--cream-mut);cursor:pointer;transition:all .2s;font-size:14px;}
 .iconbtn:hover{color:var(--cream);border-color:var(--acc);}
 
-.rail{overflow-x:auto;padding:.5rem .1rem 2.3rem;margin-top:.5rem;}
+.rail{overflow-x:auto;padding:.5rem 48px 2.3rem;margin-top:.5rem;}
 .rail::-webkit-scrollbar{height:6px;}
 .rail::-webkit-scrollbar-thumb{background:var(--dline2);border-radius:3px;}
 .rail-inner{display:flex;align-items:flex-start;min-width:min-content;}
@@ -276,8 +276,8 @@ body{font-family:var(--sans);background:var(--paper);color:var(--tx);-webkit-fon
   <p class="sec-sub">Both are Campaigning builds and both run inside Teams. Between them they take two reporting jobs that consume whole days and hand them back as minutes.</p>
   <div class="stats reveal">
     <div class="stat"><div class="stat-n countup" data-to="2">0</div><div class="stat-rule"></div><div class="stat-l">Campaigning builds</div></div>
-    <div class="stat"><div class="stat-n countup" data-to="80" data-suffix=" hrs">0</div><div class="stat-rule"></div><div class="stat-l">Saved / month · SOV</div></div>
-    <div class="stat"><div class="stat-n"><span class="u">£</span><span class="countup" data-to="23">0</span><span class="u">k</span></div><div class="stat-rule"></div><div class="stat-l">Monthly saving · Tesco</div></div>
+    <div class="stat"><div class="stat-n countup" data-to="80" data-suffix=" hrs">0</div><div class="stat-rule"></div><div class="stat-l">Saved per month · Tesco SOV</div></div>
+    <div class="stat"><div class="stat-n countup" data-to="3" data-suffix=" hrs">0</div><div class="stat-rule"></div><div class="stat-l">Saved per week · Social &amp; Digital Audit</div></div>
     <div class="stat"><div class="stat-n countup" data-to="100" data-suffix="%">0</div><div class="stat-rule"></div><div class="stat-l">Inside Microsoft 365</div></div>
   </div>
 </div>
@@ -313,7 +313,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--tx);-webkit-fon
         <div class="ph-title">Share of Voice Reporting (Tesco)</div>
         <div class="ph-desc">Automates the monthly Tesco SOV report end to end. Pulls coverage from Signal AI, categorises every article using Microsoft Foundry GPT-5.4-mini, calculates share of voice across peer brands, and writes the completed Excel and PowerPoint automatically.</div>
         <div class="ph-chips">
-          <span class="chip">Power Automate</span><span class="chip">Microsoft Foundry</span><span class="chip">GPT-5.4-mini</span><span class="chip">Signal AI API</span><span class="chip">Excel connector</span><span class="chip">PowerPoint connector</span><span class="chip">Copilot Studio</span><span class="chip chip-save">Saves £23,010 / month</span>
+          <span class="chip">Power Automate</span><span class="chip">Microsoft Foundry</span><span class="chip">GPT-5.4-mini</span><span class="chip">Signal AI API</span><span class="chip">Excel connector</span><span class="chip">PowerPoint connector</span><span class="chip">Copilot Studio</span><span class="chip chip-save">Saves 80 hrs / month</span>
         </div>
       </div>
       <div class="ph-meta">
@@ -360,7 +360,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--tx);-webkit-fon
         <div class="ph-title">Social &amp; Digital Channel Audit</div>
         <div class="ph-desc">Automates the six-monthly social channel audit across LinkedIn, X and Instagram. Evan triggers the audit in Teams, selects the client, and the pipeline pulls post data, engagement metrics and follower counts across client and competitor accounts, returning a structured audit report without leaving Teams.</div>
         <div class="ph-chips">
-          <span class="chip">Power Automate</span><span class="chip">Microsoft Foundry</span><span class="chip">GPT-5.4</span><span class="chip chip-amber">LinkedIn API</span><span class="chip chip-amber">X API</span><span class="chip chip-amber">Instagram API</span><span class="chip">Copilot Studio</span><span class="chip chip-save">Saves £1,062 / audit</span>
+          <span class="chip">Power Automate</span><span class="chip">Microsoft Foundry</span><span class="chip">GPT-5.4</span><span class="chip chip-amber">LinkedIn API</span><span class="chip chip-amber">X API</span><span class="chip chip-amber">Instagram API</span><span class="chip">Copilot Studio</span><span class="chip chip-save">Saves 3 hrs / week</span>
         </div>
       </div>
       <div class="ph-meta">
@@ -434,12 +434,9 @@ body{font-family:var(--sans);background:var(--paper);color:var(--tx);-webkit-fon
 <script>
 const D = {
   1: [
-    {n:"Trigger",t:"Scheduled trigger fires",tool:"Power Automate",
-      b:"The Power Automate flow is set to run on the first working day of every month at 6am. No one needs to do anything. The flow wakes up, checks the date and begins. Jonny or Lucy can also trigger it manually from Copilot Studio in Teams if they need to re-run outside the schedule.",
-      rules:[{t:"No manual action needed",d:"The scheduled trigger means the report starts running before the team arrives at their desks."},{t:"Manual override available",d:"Jonny or Lucy type 'run SOV report' in the Copilot Studio Teams chat to kick it off on demand."}],
-      m:{t:"Triggered by CSV upload to SharePoint",tool:"Power Automate (SharePoint file trigger)",
-        b:"In manual mode there is no scheduled run. Jonny or Lucy export the previous month's coverage from Signal AI as a CSV and drop it into the designated SharePoint folder. Power Automate's 'when a file is created' trigger fires the moment the file lands, and the flow begins. Dropping the file in is the only manual action required all month.",
-        rules:[{t:"The upload is the trigger",d:"No schedule to watch; the flow starts itself the moment the CSV appears in the agreed SharePoint folder."},{t:"Folder agreed once in discovery",d:"Jonny and Lucy confirm the destination folder during discovery. From then on it's drag, drop, done."}]}},
+    {n:"Email trigger",t:"Daily press cuts email arrives",tool:"Power Automate (inbox trigger)",
+      b:"The flow starts when the daily Tesco press cuts email arrives. The Tesco Press Office sends those cuts to Jonny or Lucy's inbox every day, and Power Automate watches that inbox and fires automatically the moment it detects an email from the Press Office sender address. No one has to start anything and there is no schedule to maintain, the process begins itself the moment the cuts land.",
+      rules:[{t:"The email is the trigger",d:"Power Automate watches Jonny or Lucy's inbox and starts the moment an email arrives from the Tesco Press Office sender address."},{t:"No manual action needed",d:"The cuts arrive daily from the Press Office, so the flow begins on its own. Nothing has to be remembered or kicked off by hand."}]},
     {n:"Signal AI pull",t:"Coverage data pulled from Signal AI",tool:"Power Automate HTTP connector",
       b:"Power Automate calls the Signal AI API with the agreed boolean query: Tesco brand terms, peer brand terms and a date range covering the previous month. Signal AI returns a structured JSON array of articles including title, source, date, URL and sentiment score. If Signal AI API is unavailable, Jonny or Lucy upload a CSV export to a designated SharePoint folder and the flow picks it up automatically.",
       rules:[{t:"Boolean query agreed in discovery",d:"The exact query strings for Tesco and each peer brand are defined during the discovery phase and locked into the flow."},{t:"CSV fallback built in",d:"If the API route is not confirmed, the flow watches a SharePoint folder for a CSV upload instead."}],
@@ -511,8 +508,7 @@ function eff(n){ return D[n].map(s=> (mode[n]==='manual'&&s.m) ? {...s,...s.m} :
 /* per-step live-activity log lines + produced artifact (manual variants where the step differs) */
 const LOG={
   1:[
-    {lg:["Schedule check · 1st working day 06:00","Flow woken, beginning run"],out:"Run started",
-      m:{lg:["Watching SharePoint folder","CSV detected · file-created trigger fired"],out:"Upload detected"}},
+    {lg:["Watching Jonny / Lucy inbox","Email from Tesco Press Office detected","Reading the daily press cuts"],out:"Trigger fired · cuts received"},
     {lg:["GET · Signal AI API","Query: Tesco + 5 peers · last 30 days","Parsing JSON response"],out:"247 articles returned",
       m:{lg:["Reading upload from SharePoint","Parsing CSV rows → JSON"],out:"247 rows parsed"}},
     {lg:["Filtering duplicates by URL","Dropping below relevance threshold","Removing bot-flagged items"],out:"212 clean articles"},
@@ -541,10 +537,10 @@ const LOG={
 const META={
   1:{
     api:{tag:'Live flow · API',calloutClass:'callout amber',
-      flow:`<span>Signal AI API</span><span class="arr"> → </span>Power Automate (pull + clean)<span class="arr"> → </span><span>GPT-5.4-mini</span> (categorise)<span class="arr"> → </span>Power Automate (SOV calc)<span class="arr"> → </span><span>Excel API</span> (populate)<span class="arr"> → </span><span>PowerPoint API</span> (populate)<span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (notify Jonny / Lucy)`,
+      flow:`<span>Press cuts email</span> (Tesco Press Office)<span class="arr"> → </span><span>Power Automate</span> (inbox trigger)<span class="arr"> → </span><span>Signal AI API</span><span class="arr"> → </span>Power Automate (pull + clean)<span class="arr"> → </span><span>GPT-5.4-mini</span> (categorise)<span class="arr"> → </span>Power Automate (SOV calc)<span class="arr"> → </span><span>Excel API</span> (populate)<span class="arr"> → </span><span>PowerPoint API</span> (populate)<span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (notify Jonny / Lucy)`,
       callout:`Signal AI API access to be confirmed in discovery. If unavailable, switch to <strong>Manual · CSV</strong> above; Jonny or Lucy upload a Signal AI export to SharePoint and the flow runs identically from there.`},
     manual:{tag:'Live flow · Manual CSV',calloutClass:'callout',
-      flow:`<span>Signal AI CSV export</span> (Jonny / Lucy)<span class="arr"> → </span><span>SharePoint</span> (upload)<span class="arr"> → </span>Power Automate (read + clean)<span class="arr"> → </span><span>GPT-5.4-mini</span> (categorise)<span class="arr"> → </span>Power Automate (SOV calc)<span class="arr"> → </span><span>Excel API</span><span class="arr"> → </span><span>PowerPoint API</span><span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (notify)`,
+      flow:`<span>Press cuts email</span> (Tesco Press Office)<span class="arr"> → </span><span>Power Automate</span> (inbox trigger)<span class="arr"> → </span><span>Signal AI CSV</span> (Jonny / Lucy upload to SharePoint)<span class="arr"> → </span>Power Automate (read + clean)<span class="arr"> → </span><span>GPT-5.4-mini</span> (categorise)<span class="arr"> → </span>Power Automate (SOV calc)<span class="arr"> → </span><span>Excel API</span><span class="arr"> → </span><span>PowerPoint API</span><span class="arr"> → </span><span>SharePoint</span> (save)<span class="arr"> → </span><span>Teams</span> (notify)`,
       callout:`No API dependency. The only manual action is dropping the Signal AI CSV export into SharePoint once a month; everything after the upload is byte-for-byte identical to the API flow. This is the zero-risk path if Signal AI API access isn't confirmed.`}
   },
   2:{
